@@ -1,8 +1,13 @@
 
+import itertools
+import numpy as np
+
 transactions=[]
 minimum_confidence=70
 items=set({})
 C1=[]
+min_sup=2
+L=[]
 
 def Support(itemset):
     count=0
@@ -26,3 +31,24 @@ for itm in items:
     C1.append([itm])
 
 print(C1)
+C=C1
+
+i=1
+while(i<3):
+    print("Iter #"+str(i))
+    C_temp=C
+    for itemlst in C_temp:
+        print(str(itemlst) + " : " + str(Support(itemlst)))
+        if(Support(itemlst)<min_sup):
+            C_temp.remove(itemlst)
+
+    print(C_temp)
+    L.append(C_temp)
+
+    C=[]
+    for itemlst_x in C_temp:
+        for itemlst_y in C_temp:
+            C.append(np.concatenate(itemlst_x,itemlst_x))
+
+    #C=np.concatenate((C_temp,C_temp))
+    i=i+1
