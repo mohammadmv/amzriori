@@ -9,6 +9,16 @@ C1=[]
 min_sup=2
 L=[]
 
+def Join(Cx,Cy):
+    Cres=[]
+    for lstx in Cx:
+        for lsty in Cy:
+            newlst=lstx + [x for x in lsty if x not in lstx]
+            if(newlst not in Cx and newlst not in Cy and newlst not in Cres):
+                Cres.append(sorted(newlst))
+
+    return Cres
+
 def Support(itemset):
     count=0
     for transaction in transactions:
@@ -46,9 +56,9 @@ while(i<3):
     L.append(C_temp)
 
     C=[]
-    for itemlst_x in C_temp:
-        for itemlst_y in C_temp:
-            C.append(np.concatenate(itemlst_x,itemlst_x))
+    #for itemlst_x in C_temp:
+    #    for itemlst_y in C_temp:
+    #        C.append(np.concatenate(itemlst_x,itemlst_x))
 
-    #C=np.concatenate((C_temp,C_temp))
+    C=Join(C_temp,C_temp)
     i=i+1
