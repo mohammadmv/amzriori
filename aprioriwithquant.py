@@ -4,12 +4,35 @@ transactions=[]
 minimum_confidence=70
 items=set({})
 C1=[]
-min_sup=2
+min_sup=4
 L=[]
 
+def IsSubSet(S1,S2):
+    for smaller in S1:
+        is_smaller=False
+        for bigger in S2:
+            if CheckSameItemLessQuantity(smaller,bigger):
+                is_smaller=True
+                break
+        if not is_smaller:
+            return False
+    return True
+
+def CheckSameItemLessQuantity(s,b):
+
+    sq = int(s.replace('(', '').replace(')', '').split(' ')[0])
+    si = int(s.replace('(', '').replace(')', '').split(' ')[1])
+    bq = int(b.replace('(', '').replace(')', '').split(' ')[0])
+    bi = int(b.replace('(', '').replace(')', '').split(' ')[1])
+
+    if (si == bi and sq <= bq):
+        return True
+    else:
+        return False
 
 def Subtract(first,second):
     return list(set(first) - set(second))
+
 
 def Join(Cx,Cy):
     Cres=[]
@@ -18,24 +41,30 @@ def Join(Cx,Cy):
             newlst=lstx + [x for x in lsty if x not in lstx]
             if(newlst not in Cx+Cy and sorted(newlst) not in Cres):
                 Cres.append(sorted(newlst))
-
+    for itemlst in Cres:
+        for pair1 in itemlst:
+            for pair2 in itemlst:
+                sq = int(s.replace('(', '').replace(')', '').split(' ')[0])
+                si = int(s.replace('(', '').replace(')', '').split(' ')[1])
+                bq = int(b.replace('(', '').replace(')', '').split(' ')[0])
+                bi = int(b.replace('(', '').replace(')', '').split(' ')[1])
     return Cres
 
 def Support(itemset):
     count=0
     for transaction in transactions:
-        if(set(itemset) <= set(transaction)):
+        if(IsSubSet(itemset,transaction)):
             count=count+1
     return count
 
 
-f= open("simpledata.txt", "r")
+f= open("data.txt", "r")
 transactions_num=int(f.readline())
 print(transactions_num)
 for i in range(0,transactions_num):
-    line=f.readline().split(' ')
-    transactions.append([int(i) for i in line])
-    items.update([ int(i) for i in line])
+    line=f.readline().replace('\n','').split(',')
+    transactions.append([str(i) for i in line])
+    items.update([ str(i) for i in line])
 
 print(items)
 
