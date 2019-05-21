@@ -1,6 +1,4 @@
-
-import itertools
-import numpy as np
+from itertools import combinations
 
 transactions=[]
 minimum_confidence=70
@@ -9,23 +7,8 @@ C1=[]
 min_sup=2
 L=[]
 
-
-def divide(iterable, parts):
-    ''' Partitions an iterable into parts number of lists. '''
-    items = list(iterable)
-
-    seqs = [[] for _ in range(parts)]
-    while items:
-        for i in range(parts):
-            if not items:
-                break
-
-            seqs[i].append(items.pop())
-
-    return seqs
-
-def Subtract(lst,itm):
-    return list(set(lst) - set([itm]))
+def Subtract(first,second):
+    return list(set(first) - set(second))
 
 def Join(Cx,Cy):
     Cres=[]
@@ -45,7 +28,7 @@ def Support(itemset):
     return count
 
 
-f= open("simpledata.txt", "r")
+f= open("data.txt", "r")
 transactions_num=int(f.readline())
 print(transactions_num)
 for i in range(0,transactions_num):
@@ -91,8 +74,11 @@ print(L)
 
 for itemlst in L:
     allperms=[itemlst[i::2] for i in range(2)]
-    print(divide(itemlst,2))
     if(len(itemlst)>=3):
-        for item in itemlst:
-            print(str(Subtract(itemlst,item))+" ----> "+ str(item) + "   Confidence :" + str(Support(itemlst)/Support(Subtract(itemlst,item))))
+        for k in range(1,len(itemlst)):
+            allcomb=list(combinations(itemlst, k))
+            for right in list(combinations(itemlst,k)):
+                left=Subtract(itemlst,list(right))
+                if(Support(itemlst)/Support(left)*100>minimum_confidence):
+                    print(str(left)+" ----> "+ str(list(right)) + "   Confidence :" + str(100*Support(itemlst)/Support(left)))
 
